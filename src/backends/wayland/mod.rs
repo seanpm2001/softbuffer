@@ -82,6 +82,9 @@ impl<D: HasDisplayHandle + ?Sized> ContextInterface<D> for Rc<WaylandDisplayImpl
 
 impl<D: ?Sized> Drop for WaylandDisplayImpl<D> {
     fn drop(&mut self) {
+        if self.shm.version() >= 2 {
+            self.shm.release();
+        }
         // Make sure the connection is dropped first.
         self.conn = None;
     }
